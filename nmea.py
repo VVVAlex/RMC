@@ -1,6 +1,7 @@
 import time
 import functools
 import operator
+import argparse
 import customtkinter as ctk
 from edit import Editor
 from port import Port
@@ -10,6 +11,22 @@ ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("blue")
 
 trace = print if True else lambda *x: None  # False | True
+
+parser = argparse.ArgumentParser(description='set interval and timeout')
+parser.add_argument(
+    '--interval',
+    type=float,
+    default=1.0,
+    help='interval an float (default: 1.0)'
+)
+parser.add_argument(
+    '--timeout',
+    type=float,
+    default=0.15,
+    help='timeout an float (default: 0.15)'
+)
+namespace = parser.parse_args()
+print(namespace.interval, namespace.timeout)
 
 
 class App(ctk.CTk):
@@ -31,7 +48,7 @@ class App(ctk.CTk):
         self.show = False
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(4, weight=1)
-        self.top = Port(self)
+        self.top = Port(self, namespace.timeout)
         self.top.grid(row=0, column=0, padx=1, pady=(1, 0), sticky="we")
         self.top.grid_columnconfigure(2, weight=1)
         self.top.grid_rowconfigure(0, weight=1)
@@ -62,10 +79,11 @@ class App(ctk.CTk):
     def tick(self) -> None:
         """Цикл посылки данных"""
         secs = time.time()
-        if secs - self.old_secs >= 1:   # задержка 1.0
+        if secs - self.old_secs >= namespace.interval:   # задержка 1.0
             self.old_secs = secs
             self.cnt.d_send.set_local_time()       # показать локальное время
-            self.send_data()
+            if self.top.is_open():
+                self.send_data()
         self.update()
         self.after(20, self.tick)
 

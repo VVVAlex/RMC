@@ -11,12 +11,12 @@ port_exc = serial.SerialException
 class Port(ctk.CTkFrame):
     """Верхний фрейм"""
 
-    def __init__(self, master=None):
+    def __init__(self, master=None, timeout=0.15):
         self.master = master
         super().__init__(master, corner_radius=0, border_width=0, border_color="grey75")
         font = ctk.CTkFont(family=f"{family}", size=font_size+2)
         self.br = 4800
-        self.tty = serial.Serial(timeout=0.15, baudrate=self.br)
+        self.tty = serial.Serial(timeout=timeout, baudrate=self.br)
         self.tty.write_timeout = 0  # !!
         self.started = False
         self.info = tk.StringVar()
