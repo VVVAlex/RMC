@@ -45,7 +45,7 @@ class Left(ctk.CTkFrame):
     def set_lat_lon(self, data: collections.namedtuple) -> None:
         """Обновить данные широты и долготы"""
         # print(data)
-        dt_lat = int(data.lat_min) + int(data.lat_sec)/60
+        dt_lat = int(data.lat_min) + int(data.lat_sec) / 60
         d_lat = f"{dt_lat:.3f}"
         dt_lon = int(data.lon_min) + int(data.lon_sec) / 60
         d_lon = f"{dt_lon:.3f}"

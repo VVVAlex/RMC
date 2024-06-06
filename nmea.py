@@ -14,19 +14,23 @@ trace = print if True else lambda *x: None  # False | True
 
 parser = argparse.ArgumentParser(description='set interval and timeout')
 parser.add_argument(
+    '-i',
     '--interval',
     type=float,
     default=1.0,
     help='interval an float (default: 1.0)'
 )
 parser.add_argument(
+    '-t',
     '--timeout',
     type=float,
     default=0.15,
     help='timeout an float (default: 0.15)'
 )
 namespace = parser.parse_args()
-print(namespace.interval, namespace.timeout)
+if namespace.interval < 1.0:
+    namespace.interval = 1.0
+# print(namespace.interval, namespace.timeout)
 
 
 class App(ctk.CTk):
